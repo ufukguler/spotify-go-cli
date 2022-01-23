@@ -15,7 +15,7 @@ var startCmd = &cobra.Command{
 	Short:   "Start/Resume Playback",
 	Long:    "Start a new context or resume current playback on the user's active device.",
 	Example: "spotify-go-client play",
-	Aliases: []string{"r"},
+	Aliases: []string{"resume"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Start(); err != nil {
 			fmt.Println(err)

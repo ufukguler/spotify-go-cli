@@ -14,12 +14,6 @@ import (
 	"time"
 )
 
-const (
-	redirectURI = "http://localhost:8080/callback"
-	state       = "abc123"
-	tokenUrl    = "https://accounts.spotify.com/api/token"
-)
-
 var (
 	ch         = make(chan string)
 	httpClient = &http.Client{}
@@ -37,7 +31,7 @@ func Login() {
 
 	loginUrl := "https://accounts.spotify.com/authorize?response_type=code&client_id=" + viper.GetString("client_id") +
 		"&redirect_uri=" + redirectURI +
-		"&scope=user-read-private%20user-modify-playback-state%20user-read-playback-state" +
+		"&scope=" + scope +
 		"&state=" + state
 
 	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", loginUrl)

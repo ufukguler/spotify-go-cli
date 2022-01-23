@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"github.com/jedib0t/go-pretty/table"
 	"github.com/spf13/viper"
 	"io"
@@ -20,10 +20,9 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 	if res.StatusCode >= 400 {
 		decoder := json.NewDecoder(res.Body)
 		if err2 := decoder.Decode(&response); err2 != nil {
-			fmt.Printf("ErrorResponse Message %v", response.Error.Message)
 			return res, err2
 		}
-		fmt.Printf("Error Message: %s", response.Error.Message)
+		return res, errors.New(response.Error.Message)
 	}
 	return res, nil
 }

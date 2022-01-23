@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-const UserBaseUrl = "https://api.spotify.com/v1/me"
-
 func Profile() error {
 	req, err := http.NewRequest(http.MethodGet, UserBaseUrl, nil)
 	if err != nil {

@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-const SearchBaseUrl = "https://api.spotify.com/v1/search"
-
 func Search(q string) error {
 	fmt.Printf("Searching for: %v\n", q)
 	req, err := http.NewRequest(http.MethodGet, SearchBaseUrl, nil)

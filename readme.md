@@ -13,6 +13,7 @@ go build
 
 ```
 $ .\spotify-go-cli --help
+
 Usage:
   spotify-go-client [flags]
   spotify-go-client [command]
@@ -29,11 +30,15 @@ Available Commands:
   previous    Skip To Previous
   profile     Get Current User's Profile
   queue       Add Item to Playback Queue
+  recent      Get Recently Played Tracks
   repeat      Set Repeat Mode
   search      Search for Item
+  seek        Seek To Position
   set-client  Set Client ID
   set-secret  Set Secret Key
+  shuffle     Toggle Playback Shuffle
   start       Start/Resume Playback
+  state       Get Playback State
   transfer    Transfer Playback
   version     Get CLI version
   volume      Set Playback Volume
@@ -58,7 +63,6 @@ Use "spotify-go-client [command] --help" for more information about a command.
 ## TODO
 
 - [X] refresh token
-- [ ] customize answers by status code
-- [ ] add all player commands (9/14 done)
+- [X] add all player commands (14/14 done)
 
 

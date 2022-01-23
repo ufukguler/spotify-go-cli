@@ -7,9 +7,8 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 	"net/http"
 	"strings"
+	"time"
 )
-
-const PlayerBaseUrl = "https://api.spotify.com/v1/me/player"
 
 var response ErrorResponse
 
@@ -28,6 +27,7 @@ func Current() error {
 	var current CurrentSong
 	if err2 := decode(res.Body, &current); err2 != nil {
 		fmt.Printf("Decoding error: %v", err2)
+		return err2
 	}
 	artists := make([]string, 0)
 	for _, artist := range current.Item.Artists {
@@ -179,5 +179,90 @@ func Seek(sec string) error {
 	query.Add("position_ms", sec)
 	req.URL.RawQuery = query.Encode()
 	_, err = sendRequest(req)
+	return err
+}
+
+func RecentlyPlayed() error {
+	req, err := http.NewRequest(http.MethodGet, PlayerBaseUrl+"/recently-played", nil)
+	if err != nil {
+		fmt.Printf("Http request error:%v", err)
+		return err
+	}
+	res, err := sendRequest(req)
+	if err != nil {
+		return err
+	}
+	var recent Recent
+	if err2 := decode(res.Body, &recent); err2 != nil {
+		fmt.Printf("Decoding error: %v", err2)
+		return err2
+	}
+	rows := make([]table.Row, 0)
+	for _, item := range recent.Items {
+		artistNames := make([]string, 0)
+		for _, artist := range item.Track.Artists {
+			artistNames = append(artistNames, artist.Name)
+		}
+		rows = append(rows, table.Row{
+			item.Track.Name,
+			strings.Join(artistNames, ","),
+			item.Track.Album.Name,
+			item.Track.Type,
+			item.PlayedAt.Format(time.RFC822Z),
+		})
+	}
+	header := table.Row{"Name", "Artists", "Album", "Type", "Played At"}
+	prettyPrintTable(header, rows)
+	return err
+}
+
+func Shuffle(arg string) error {
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl+"/shuffle", nil)
+	if err != nil {
+		fmt.Printf("Http request error:%v", err)
+		return err
+	}
+	query := req.URL.Query()
+	if arg == "on" {
+		arg = "true"
+	} else {
+		arg = "false"
+	}
+	query.Set("state", arg)
+	req.URL.RawQuery = query.Encode()
+	_, err = sendRequest(req)
+	return err
+}
+
+func State() error {
+	req, err := http.NewRequest(http.MethodGet, PlayerBaseUrl, nil)
+	if err != nil {
+		fmt.Printf("Http request error:%v", err)
+		return err
+	}
+	res, err := sendRequest(req)
+	if err != nil {
+		return err
+	}
+	var playing PlayingNow
+	if err2 := decode(res.Body, &playing); err2 != nil {
+		fmt.Printf("Decoding error: %v", err2)
+		return err2
+	}
+	artistNames := make([]string, 0)
+	for _, artist := range playing.Item.Artists {
+		artistNames = append(artistNames, artist.Name)
+	}
+	row := table.Row{
+		playing.IsPlaying,
+		playing.Device.Name,
+		playing.RepeatState,
+		playing.ShuffleState,
+		playing.Item.Name,
+		playing.Item.Album.Name,
+		strings.Join(artistNames, ","),
+	}
+	header := table.Row{"IsPlaying", "Device", "Repeat", "Shuffle", "Song", "Album", "Artist"}
+	prettyPrintTable(header, append(make([]table.Row, 0), row))
 	return err
 }
