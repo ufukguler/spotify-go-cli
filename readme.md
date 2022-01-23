@@ -51,7 +51,7 @@ Use "spotify-go-client [command] --help" for more information about a command.
 
 ## TODO
 
-- [ ] refresh token
+- [X] refresh token
 - [ ] customize answers by status code
 - [ ] add all player commands (9/14 done)
 

@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
+	"spotify-go-cli/service"
 )
 
 const (
@@ -53,14 +54,26 @@ func initConfig() {
 	viper.AutomaticEnv()
 	if err := viper.ReadInConfig(); err != nil {
 		createConfigFile()
+	} else {
+		// check if token expired
+		if err = service.RefreshToken(); err != nil {
+			fmt.Printf("Error while refreshing token. %v\n", err)
+			return
+		}
 	}
 }
 
 // createConfigFile creates a config file if there is no
 func createConfigFile() {
-	config := []byte(`access_token:
+	config := []byte(`
+access_token:
+expires_in:
+refresh_token:
+scope:
+token_type:
 client_id:
-secret:`)
+secret:
+`)
 	home, err := homedir.Dir()
 	if err != nil {
 		fmt.Println(err.Error())
