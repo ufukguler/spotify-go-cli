@@ -155,3 +155,16 @@ func Devices() error {
 	prettyPrintTable(header, rows)
 	return err
 }
+
+func Queue(uri string) error {
+	req, err := http.NewRequest(http.MethodPost, PlayerBaseUrl+"/queue", nil)
+	if err != nil {
+		fmt.Printf("Http request error:%v", err)
+		return err
+	}
+	query := req.URL.Query()
+	query.Add("uri", uri)
+	req.URL.RawQuery = query.Encode()
+	_, err = sendRequest(req)
+	return err
+}
