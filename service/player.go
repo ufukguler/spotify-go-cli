@@ -168,3 +168,16 @@ func Queue(uri string) error {
 	_, err = sendRequest(req)
 	return err
 }
+
+func Seek(sec string) error {
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl+"/seek", nil)
+	if err != nil {
+		fmt.Printf("Http request error:%v", err)
+		return err
+	}
+	query := req.URL.Query()
+	query.Add("position_ms", sec)
+	req.URL.RawQuery = query.Encode()
+	_, err = sendRequest(req)
+	return err
+}
