@@ -1,4 +1,5 @@
-## TL;DR
+## TL; DR
+Spotify CLI made with Golang. (WIP)
 
 ```bash
 go build
@@ -6,8 +7,9 @@ go build
 ./spotify-go-cli set-secret xxxxx
 ./spotify-go-cli login
 ````
+---
 
-### available commands
+### Available Commands
 
 ```
 $ .\spotify-go-cli --help
@@ -16,25 +18,29 @@ Usage:
   spotify-go-client [command]
 
 Available Commands:
-  completion  Generate the autocompletion script for the specified shell      
+  completion  Generate the autocompletion script for the specified shell
   config      Show current configuration
-  current     Get the object currently being played.                          
-  devices     Get Available Devices                                           
-  help        Help about any command                                          
-  login       Login                                                           
-  next        Skip To Next                                                    
-  pause       Pause Playback                                                  
-  previous    Skip To Previous                                                
-  repeat      Set Repeat Mode                                                 
-  set-client  Set Client ID                                                   
-  set-secret  Set Secret Key                                                  
-  start       Start/Resume Playback                                           
-  transfer    Transfer Playback                                               
-  version     Get CLI version                                                 
-  volume      Set Playback Volume  
+  current     Get Currently Playing Track
+  devices     Get Available Devices
+  help        Help about any command
+  login       Login
+  next        Skip To Next
+  pause       Pause Playback
+  previous    Skip To Previous
+  profile     Get Current User's Profile
+  queue       Add Item to Playback Queue
+  repeat      Set Repeat Mode
+  search      Search for Item
+  set-client  Set Client ID
+  set-secret  Set Secret Key
+  start       Start/Resume Playback
+  transfer    Transfer Playback
+  version     Get CLI version
+  volume      Set Playback Volume
 
 Flags:
-      -h, --help            help for spotify-go-client
+      --config string   config file ($HOME/.spotify-go.yml)
+  -h, --help            help for spotify-go-client
 
 Use "spotify-go-client [command] --help" for more information about a command.
 ```

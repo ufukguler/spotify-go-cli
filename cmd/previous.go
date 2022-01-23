@@ -15,6 +15,7 @@ var prev = &cobra.Command{
 	Short:   "Skip To Previous",
 	Long:    "Skips to previous track in the user’s queue.",
 	Example: "spotify-go-client previous",
+	Aliases: []string{"prev"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Previous(); err != nil {
 			fmt.Println(err)

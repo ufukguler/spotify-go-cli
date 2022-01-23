@@ -15,6 +15,7 @@ var transferCmd = &cobra.Command{
 	Short:   "Transfer Playback",
 	Long:    "Transfer playback to a new device and determine if it should start playing.",
 	Example: "spotify-go-client transfer [DEVICE-ID]",
+	Aliases: []string{"t"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Println("Invalid usage of transfer.")

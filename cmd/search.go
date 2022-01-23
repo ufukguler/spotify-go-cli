@@ -16,6 +16,7 @@ var searchCmd = &cobra.Command{
 	Short:   "Search for Item",
 	Long:    "Get Spotify catalog information about tracks that match a keyword string. Flags are optional.",
 	Example: "spotify-go-client search [query] --limit=5",
+	Aliases: []string{"s"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Println("Invalid usage of search.")

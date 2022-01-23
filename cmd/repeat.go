@@ -17,6 +17,10 @@ var repeatCmd = &cobra.Command{
 	ValidArgs: []string{"track", "context", "off"},
 	Example:   "spotify-go-client repeat track",
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("Invalid usage of repeat.")
+			return
+		}
 		if err := service.Repeat(args[0]); err != nil {
 			fmt.Println(err)
 			return

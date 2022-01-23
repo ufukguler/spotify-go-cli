@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"spotify-go-cli/service"
+	"strconv"
 )
 
 func init() {
@@ -20,6 +21,15 @@ The volume to set. Must be a value from 0 to 100 inclusive.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Println("Invalid usage of volume.")
+			return
+		}
+		parseInt, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Println("Given volume value is not a number.")
+			return
+		}
+		if parseInt < 0 || parseInt > 100 {
+			fmt.Println("Invalid volume value. (should be between 0 to 100)")
 			return
 		}
 		if err := service.Volume(args[0]); err != nil {

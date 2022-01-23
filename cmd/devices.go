@@ -11,6 +11,7 @@ var devicesCmd = &cobra.Command{
 	Short:   "Get Available Devices",
 	Long:    "Get information about a user’s available devices.",
 	Example: "spotify-go-client devices",
+	Aliases: []string{"device"},
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Devices(); err != nil {
 			fmt.Println(err)

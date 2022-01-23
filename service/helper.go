@@ -19,10 +19,9 @@ func sendRequest(req *http.Request) (*http.Response, error) {
 
 	if res.StatusCode >= 400 {
 		decoder := json.NewDecoder(res.Body)
-		err2 := decoder.Decode(&response)
-		if err2 != nil {
+		if err2 := decoder.Decode(&response); err2 != nil {
 			fmt.Printf("ErrorResponse Message %v", response.Error.Message)
-			return res, err
+			return res, err2
 		}
 		fmt.Printf("Error Message: %s", response.Error.Message)
 	}
