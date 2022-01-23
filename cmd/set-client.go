@@ -12,7 +12,7 @@ var setClientCmd = &cobra.Command{
 	Example: "spotify-go-client set-client [CLIENT-ID]",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Printf("Invalid Client ID")
+			fmt.Println("Invalid usage of set-client.")
 			return
 		}
 

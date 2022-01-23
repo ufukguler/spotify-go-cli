@@ -12,7 +12,7 @@ var setSecretKeyCmd = &cobra.Command{
 	Example: "spotify-go-client set-secret [SECRET-KEY]",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Printf("Invalid Secret Key")
+			fmt.Println("Invalid usage of set-secret.")
 			return
 		}
 		viper.Set("SECRET", args[0])
