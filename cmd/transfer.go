@@ -22,6 +22,8 @@ var transferCmd = &cobra.Command{
 		}
 		if err := service.Transfer(args[0]); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }

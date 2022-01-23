@@ -18,6 +18,8 @@ var pauseCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.PauseResume(); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }

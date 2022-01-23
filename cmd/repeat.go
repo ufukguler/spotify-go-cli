@@ -19,6 +19,8 @@ var repeatCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Repeat(args[0]); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }

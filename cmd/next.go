@@ -14,7 +14,9 @@ var nextCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Next(); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }
 

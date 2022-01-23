@@ -24,6 +24,8 @@ The volume to set. Must be a value from 0 to 100 inclusive.`,
 		}
 		if err := service.Volume(args[0]); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }

@@ -18,6 +18,8 @@ var prev = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := service.Previous(); err != nil {
 			fmt.Println(err)
+			return
 		}
+		fmt.Println("[OK]")
 	},
 }
