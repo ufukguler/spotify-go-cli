@@ -15,7 +15,7 @@ var configCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		file, err := os.ReadFile(home + "\\.spotify-go.env")
+		file, err := os.ReadFile(home + "\\.spotify-go.yml")
 		if err != nil {
 			fmt.Println(err.Error())
 		}

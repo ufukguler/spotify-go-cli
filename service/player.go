@@ -5,33 +5,28 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/jedib0t/go-pretty/table"
-	"github.com/spf13/viper"
 	"net/http"
-	"os"
 	"strings"
 )
 
-const BASEURL = "https://api.spotify.com/v1/me/player"
+const PlayerBaseUrl = "https://api.spotify.com/v1/me/player"
 
 var response ErrorResponse
 
 func Current() error {
-	req, err := http.NewRequest(http.MethodGet, BASEURL+"/currently-playing", nil)
+	req, err := http.NewRequest(http.MethodGet, PlayerBaseUrl+"/currently-playing", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	query := req.URL.Query()
-	req.URL.RawQuery = query.Encode()
-	initHeaders(req)
-	res, err := httpClient.Do(req)
+	res, err := sendRequest(req)
 	if err != nil {
+		fmt.Printf("Http client error:%v", err)
 		return err
 	}
 
 	var current CurrentSong
-	decoder := json.NewDecoder(res.Body)
-	if err2 := decoder.Decode(&current); err2 != nil {
+	if err2 := decode(res.Body, &current); err2 != nil {
 		fmt.Printf("Decoding error: %v", err2)
 	}
 	artists := make([]string, 0)
@@ -63,62 +58,68 @@ func Transfer(arg string) error {
 		fmt.Printf("Encoding error:%v", err)
 		return err
 	}
-	req, err := http.NewRequest(http.MethodPut, BASEURL, &buffer)
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl, &buffer)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Repeat(arg string) error {
-	url := BASEURL + "/repeat?state=" + arg
+	url := PlayerBaseUrl + "/repeat?state=" + arg
 	req, err := http.NewRequest(http.MethodPut, url, nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Next() error {
-	req, err := http.NewRequest(http.MethodPost, BASEURL+"/next", nil)
+	req, err := http.NewRequest(http.MethodPost, PlayerBaseUrl+"/next", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Previous() error {
-	req, err := http.NewRequest(http.MethodPost, BASEURL+"/previous", nil)
+	req, err := http.NewRequest(http.MethodPost, PlayerBaseUrl+"/previous", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func PauseResume() error {
-	req, err := http.NewRequest(http.MethodPut, BASEURL+"/pause", nil)
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl+"/pause", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Start() error {
-	req, err := http.NewRequest(http.MethodPut, BASEURL+"/play", nil)
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl+"/play", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Volume(arg string) error {
-	req, err := http.NewRequest(http.MethodPut, BASEURL+"/volume", nil)
+	req, err := http.NewRequest(http.MethodPut, PlayerBaseUrl+"/volume", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
@@ -126,25 +127,22 @@ func Volume(arg string) error {
 	query := req.URL.Query()
 	query.Set("volume_percent", arg)
 	req.URL.RawQuery = query.Encode()
-	return sendRequest(req)
+	_, err = sendRequest(req)
+	return err
 }
 
 func Devices() error {
-	req, err := http.NewRequest(http.MethodGet, BASEURL+"/devices", nil)
+	req, err := http.NewRequest(http.MethodGet, PlayerBaseUrl+"/devices", nil)
 	if err != nil {
 		fmt.Printf("Http request error:%v", err)
 		return err
 	}
-	query := req.URL.Query()
-	req.URL.RawQuery = query.Encode()
-	initHeaders(req)
-	res, err := httpClient.Do(req)
+	res, err := sendRequest(req)
 	if err != nil {
 		return err
 	}
 	var devices Device
-	decoder := json.NewDecoder(res.Body)
-	if err2 := decoder.Decode(&devices); err2 != nil {
+	if err2 := decode(res.Body, &devices); err2 != nil {
 		fmt.Printf("Decoding error: %v", err2)
 	}
 	rows := make([]table.Row, 0)
@@ -156,38 +154,4 @@ func Devices() error {
 	header := table.Row{"ID", "Name", "IsActive", "Type", "Volume", "Private Session", "Restricted"}
 	prettyPrintTable(header, rows)
 	return err
-}
-
-func sendRequest(req *http.Request) error {
-	initHeaders(req)
-	res, err := httpClient.Do(req)
-	if err != nil {
-		return err
-	}
-
-	fmt.Printf("Response Code %d\n", res.StatusCode)
-	if res.StatusCode >= 400 {
-		decoder := json.NewDecoder(res.Body)
-		err2 := decoder.Decode(&response)
-		if err2 != nil {
-			fmt.Printf("ErrorResponse Message %v", response.Error.Message)
-			return err
-		}
-		fmt.Printf("Error Message: %s", response.Error.Message)
-	}
-	return err
-}
-
-func initHeaders(req *http.Request) {
-	req.Header.Set("Authorization", "Bearer "+viper.GetString("access_token"))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
-}
-
-func prettyPrintTable(header table.Row, rows []table.Row) {
-	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(header)
-	t.AppendRows(rows)
-	t.Render()
 }
