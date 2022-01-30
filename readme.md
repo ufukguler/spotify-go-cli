@@ -1,3 +1,5 @@
+Medium post: https://medium.com/@ufuk.guler/how-to-create-a-cli-in-golang-501ea927df15
+
 ## TL; DR
 Spotify CLI made with Golang. (WIP)
 
